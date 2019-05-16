@@ -3,13 +3,14 @@ var express = require('express');
 var path = require('path');
 // var router = express.Router();
 var cookieParser = require('cookie-parser');
-var flash = require('flash');
+var flash = require('connect-flash');
 var passport = require('passport'); // Passport
-// require('./config/passport')(passport); 
+require('./config/passport')(passport); 
 var logger = require('morgan'); // Morgan
 var session = require('express-session'); // Session
 var mongoose = require('mongoose'); // Mongoose
 var configDB = require('./config/database.js'); // The Databse
+mongoose.connect(configDB.url, { useNewUrlParser: true }); // connect to our database
 
 var app = express();
 
@@ -25,14 +26,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // passport requirements
-// app.use(session({secret: 'This_is_how_2_go_about_it'})); // session secret
-// app.use(passport.initialize()); // Initializes passport
-// app.use(passport.session()); // persistent login sessions
-// app.use(flash()) // for flash messages stored in session
+app.use(session({secret: 'This_is_how_2_go_about_it'})); // session secret
+app.use(passport.initialize()); // Initializes passport
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // for flash messages stored in session
 
-// routes
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
-
 
 
 // catch 404 and forward to error handler

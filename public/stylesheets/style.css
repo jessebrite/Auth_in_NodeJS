@@ -102,11 +102,11 @@ body{
   color: darkblue!important;
 }
 
-.loginbtn{
+.loginbtn, .signupbtn{
   background-color: blue
 }
 
-.loginbtn:hover{
+.loginbtn:hover, .signupbtn:hover{
   border-color: darkblue;
   color: darkblue!important;
 }

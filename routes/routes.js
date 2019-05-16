@@ -3,7 +3,7 @@ module.exports = function(router, passport) {
 	// The homepage and its accompanying login links
 	// Home route
 	router.get('/', function(req, res) {
-		res.render('index', {title: 'Home Page'});
+		res.render('index', { title: 'Home Page' });
 	});
 
 	// LOGIN
@@ -20,13 +20,21 @@ module.exports = function(router, passport) {
 	// SIGNUP
 	// Get the signup form
 	router.get('/signup', function(req, res) {
-		res.render('signup', {title: 'Signup'}
-			// , {message: req.flash('signupMessage') }
-			);
+		try {
+			res.render('signup'
+				, {title: 'Signup', won: 'I did id!', message: req.flash('signupMessage')}
+				);
+			} catch(err) {
+				console.log(err);
+			}
 	});
 
 	// Process the signup form
-	// router.post('/signup', do something);
+	router.post('/signup', passport.authenticate('local-singup', {
+		suuccessRedirect : '/profile', // redirect to the secure profile section on success
+		failureRedirect : '/', // redirect to sinup on failure
+		failureFlash : true // Allow flash messages
+	}));
 
 	// PROFILE
 	// This route is auth-protected
@@ -48,8 +56,14 @@ module.exports = function(router, passport) {
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
+	// Log session messages
+  console.log("req is ", Object.keys(req));
+  console.log("sessionID is ", req.sessionID);
+  console.log("session is", req.session);
+  console.log("session store is", req.sessionStore);
+
 	// if user is authenticated in the session, carry on 
-	if (req.isAuthenticated) {
+	if (req.isAuthenticated()) {
 		return next();
 	}
 	 // else, redirect them to the home page
