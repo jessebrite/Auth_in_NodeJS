@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt   = require('bcrypt-nodejs');
+var mongoose = require('mongoose');
+var bcrypt   = require('bcrypt-nodejs');
 
 // define the schema for our user model
 const userSchema = mongoose.Schema({
@@ -9,16 +9,16 @@ const userSchema = mongoose.Schema({
 			required : true,
 			trim : true
 		},
-		oname : {
-			type : String,
-			required : false,
-			trim : true
-		},
-		lname : {
-			type: String,
-			required : true,
-			trim : true
-		},
+		// oname : {
+		// 	type : String,
+		// 	required : false,
+		// 	trim : true
+		// },
+		// lname : {
+		// 	type: String,
+		// 	required : true,
+		// 	trim : true
+		// },
 		email: {
 	    type: String,
 	    unique: true,
