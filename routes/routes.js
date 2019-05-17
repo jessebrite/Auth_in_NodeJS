@@ -44,13 +44,14 @@ module.exports = function(router, passport) {
 	// This route is auth-protected
 	// we will use route middleware to verify this (the isLoggedIn function)
 	router.get('/profile', isLoggedIn, function(req, res) {
-		res.render('profile', {
-			user : req.user // get the user out of session and pass to template
+		res.render('profile', { title : 'Profile',
+			user : req.user, // get the user out of session and pass to template
+			message: 'All clear'
 		});
 	});
 
 	// LOGOUT
-	router.get('logout', function(req, res) {
+	router.get('/logout', function(req, res) {
 	  req.session.destroy();
 	  req.logout();
 	  res.status(401).redirect("/");
