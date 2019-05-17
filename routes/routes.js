@@ -22,7 +22,7 @@ module.exports = function(router, passport) {
 	router.get('/signup', function(req, res) {
 		try {
 			res.render('signup'
-				, {title: 'Signup', won: 'I did id!', message: req.flash('signupMessage')}
+				, {title: 'Signup', message: req.flash('signupMessage')}
 				);
 			} catch(err) {
 				console.log(err);
@@ -30,10 +30,10 @@ module.exports = function(router, passport) {
 	});
 
 	// Process the signup form
-	router.post('/signup', passport.authenticate('local-singup', {
-		suuccessRedirect : '/profile', // redirect to the secure profile section on success
-		failureRedirect : '/', // redirect to sinup on failure
-		failureFlash : true // Allow flash messages
+	router.post('/signup', passport.authenticate('local-signup', {
+		 successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/signup', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
 	}));
 
 	// PROFILE

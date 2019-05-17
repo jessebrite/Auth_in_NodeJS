@@ -10,7 +10,13 @@ var logger = require('morgan'); // Morgan
 var session = require('express-session'); // Session
 var mongoose = require('mongoose'); // Mongoose
 var configDB = require('./config/database.js'); // The Databse
-mongoose.connect(configDB.url, { useNewUrlParser: true }); // connect to our database
+// var MongoStore = require('connect-mongo')(session); // MongoStore session
+
+// Connect to the DB
+mongoose.connect(configDB.url, { useNewUrlParser: true }, function(err, client) {
+  if (err) console.log(err); // If error, echo err
+  console.log('Connection passed');
+});
 
 var app = express();
 
@@ -26,7 +32,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // passport requirements
-app.use(session({secret: 'This_is_how_2_go_about_it'})); // session secret
+app.use(
+  session({
+    secret: 'This_is_how_2_go_about_it',
+    saveUninitialized: false,
+    resave: true
+  })
+);
 app.use(passport.initialize()); // Initializes passport
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // for flash messages stored in session
