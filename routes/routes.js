@@ -9,13 +9,17 @@ module.exports = function(router, passport) {
 	// LOGIN
 	// Get the login form
 	router.get('/login', function(req, res) {
-		res.render('login', {title: 'Login'}
-			// , {message: req.flash('loginMessage') }
+		res.render('login',
+				{title: 'Login', message: req.flash('loginMessage') }
 			);
 	});
 
 	// Process the login form
-	// router.post('/login', do something);
+	router.post('/login', passport.authenticate('local-login', {
+		successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/login', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
 
 	// SIGNUP
 	// Get the signup form
@@ -39,7 +43,7 @@ module.exports = function(router, passport) {
 	// PROFILE
 	// This route is auth-protected
 	// we will use route middleware to verify this (the isLoggedIn function)
-	router.get('/profile', isLoggedIn, function(res, req) {
+	router.get('/profile', isLoggedIn, function(req, res) {
 		res.render('profile', {
 			user : req.user // get the user out of session and pass to template
 		});
@@ -55,12 +59,12 @@ module.exports = function(router, passport) {
 };
 
 // route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
+function isLoggedIn(req, res, next) { // Start of isLoggedIn()
 	// Log session messages
-  console.log("req is ", Object.keys(req));
-  console.log("sessionID is ", req.sessionID);
-  console.log("session is", req.session);
-  console.log("session store is", req.sessionStore);
+  // console.log("req is ", Object.keys(req));
+  // console.log("sessionID is ", req.sessionID);
+  // console.log("session is", req.session);
+  // console.log("session store is", req.sessionStore);
 
 	// if user is authenticated in the session, carry on 
 	if (req.isAuthenticated()) {
@@ -68,4 +72,4 @@ function isLoggedIn(req, res, next) {
 	}
 	 // else, redirect them to the home page
   res.redirect('/');
-}
+} // End of isLoggedIn()
