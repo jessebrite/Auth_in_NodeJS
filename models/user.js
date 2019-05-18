@@ -4,11 +4,11 @@ var bcrypt   = require('bcrypt-nodejs');
 // define the schema for our user model
 const userSchema = mongoose.Schema({
 	local : {
-		fname : {
-			type : String,
-			required : true,
-			trim : true
-		},
+		// fname : {
+		// 	type : String,
+		// 	required : true,
+		// 	trim : true
+		// },
 		// oname : {
 		// 	type : String,
 		// 	required : false,
@@ -22,12 +22,12 @@ const userSchema = mongoose.Schema({
 		email: {
 	    type: String,
 	    unique: true,
-	    required: true,
+	    // required: true,
 	    trim: true
 	  },
 	  password: {
 	    type: String,
-	    required: true,
+	    // required: true,
 	  }
 	},
 	facebook : {

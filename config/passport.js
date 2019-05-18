@@ -2,9 +2,13 @@
 
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 // load up the user model
 var User = require('../models/user');
+
+// load the auth variables
+var configAuth = require('./auth');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) { // startt of function(passport)
@@ -64,7 +68,7 @@ module.exports = function(passport) { // startt of function(passport)
               // set the user's local credentials
               newUser.local = {
                 email : email,
-                password : newUser.generateHash(password)
+                password : newUser.generateHash(password), 
               };
 
               // save the user
@@ -99,9 +103,10 @@ module.exports = function(passport) { // startt of function(passport)
     	// if there are any errors, return the error before anything else
     	if(err) {
     		return done(err);
+        console.log('Wrong input');
     	}
     	if(!user) {
-    		return done(null, false, req.flash('loginMessage', 'No user found'));
+    		return done(null, false, req.flash('loginMessage', 'Sorry, user does not exist'));
     	}
     	// if the user is found but the password is wrong
     	if(!user.validPassword(password)) {
@@ -112,5 +117,51 @@ module.exports = function(passport) { // startt of function(passport)
     }); // end of find user
 
   })); // end of login LocalStragegy
+
+  // =========================================================================
+  // GOOGLE ==================================================================
+  // =========================================================================
+  passport.use(new GoogleStrategy({
+    clientID : configAuth.googleAuth.clientID,
+    clientSecret : configAuth.googleAuth.clientSecret,
+    callbackURL : configAuth.googleAuth.callbackURL,
+    },    
+    function(token, refreshToken, profile, done) {
+      // make the code asynchronous
+      // User.findOne won't fire until we have all our data back from Google
+      process.nextTick(function() {
+        // try to find the user based on their google id
+        User.findOne({'google.id' : profile.id}, function(err, user) {
+          if (err) {
+            return done(err);
+          }
+
+          // if a user is found, log them in
+          if(user) {
+            return done(null, user);
+          } else { // else if the user isn't in our database, create a new user
+              var newUser = new User();
+
+               // set all of the relevant information
+               newUser.google = {
+                id : profile.id,
+                token : token,
+                name : profile.displayName,
+                email : profile.emails[0].value // pull the first email
+              }
+
+              // persist the user
+              newUser.save(function(err) {
+                if (err) {
+                  throw err;
+                }
+                return done(null, newUser);
+              })
+          }
+        })
+      })
+    }
+  ));
+      
 
 }; // end of function(passport)
