@@ -2,8 +2,13 @@
 <%- include('partials/header'); %>
 
 <h2>Welcome to Nodejs authentication</h2>
-<p><a href="/login">Login</a> or
-<a href="/signup">Register</a></p>
+<% if(user) { %>
+	<p>Welcome <%= user.local.email %></p>
+	<a href="/logout">Logout</a></p>
+<% } else { %>
+	<p><a href="/login">Login</a> or
+	<a href="/signup">Register</a></p>
+<% } %>
 
 <!-- Include the footer -->
 <%- include('partials/footer'); %>

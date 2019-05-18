@@ -1,11 +1,24 @@
 <%- include('partials/header'); %>
 
-<div><h2><%= message %></h2></div>
+<ul>
+	<i><a href="/">Go home</a></i>
+	<i><a href="/logout">Logout</a></i>
+</ul>
+<div><h5><%= message %></h5></div>
 
-<a href="/logout">Logout</a>
-
-<p>
-  <strong>id</strong>: <%= user._id %><br>
-  <strong>email</strong>: <%= user.local.email %><br>
-  <strong>password</strong>: <%= user.local.password %>
+<p><strong>Hi</strong> 
+	<% if (user.google) { %>
+	<%= user.google.email %>
+  <% } %>
+  <% if (user.local) { %>
+	<%= user.local.email %><br>
+	<% } %>
 </p>
+
+<%- include('partials/footer') %>
+
+<style>
+	body {
+		padding: 10px;
+	}
+</style>

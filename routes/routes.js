@@ -3,15 +3,19 @@ module.exports = function(router, passport) {
 	// The homepage and its accompanying login links
 	// Home route
 	router.get('/', function(req, res) {
-		res.render('index', { title: 'Home Page' });
+		res.render('index', { title: 'Home Page', user : req.user });
 	});
 
 	// LOGIN
 	// Get the login form
 	router.get('/login', function(req, res) {
-		res.render('login',
+		try{
+			res.render('login',
 				{title: 'Login', message: req.flash('loginMessage') }
 			);
+		} catch(err) {
+			console.log(err);
+		}
 	});
 
 	// Process the login form
@@ -49,6 +53,22 @@ module.exports = function(router, passport) {
 			message: 'All clear'
 		});
 	});
+
+	// =====================================
+  // GOOGLE ROUTES =======================
+  // =====================================
+  // send to google to do the authentication
+  // profile gets us their basic information including their name
+  // email gets their emails
+  router.get('/auth/google', 
+  	passport.authenticate('google', {scope : ['profile', 'email']}));
+
+  // the callback after google has authenticated the user
+  router.get('/auth/google/callback',
+  	passport.authenticate('google', {
+  		successRedirect : '/profile',
+  		failureRedirect : '/'
+  	}));
 
 	// LOGOUT
 	router.get('/logout', function(req, res) {
