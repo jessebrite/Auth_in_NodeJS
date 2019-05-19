@@ -1,2 +1,7 @@
 #The following are the files and directories that will not be tracked by git
 /node_modules
+
+#configs
+/config/auth.js
+/config/database.js
+package-lock.json
