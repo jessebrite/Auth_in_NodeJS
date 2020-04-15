@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -5,7 +6,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var flash = require('connect-flash');
 var passport = require('passport'); // Passport
-require('./config/passport')(passport); 
+require('./config/passport')(passport);
 var logger = require('morgan'); // Morgan
 var session = require('express-session'); // Session
 var mongoose = require('mongoose'); // Mongoose

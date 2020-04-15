@@ -11,7 +11,7 @@ var User = require('../models/user');
 var configAuth = require('./auth');
 
 // expose this function to our app using module.exports
-module.exports = function(passport) { // startt of function(passport)
+module.exports = passport => { // startt of function(passport)
 
   // =========================================================================
   // passport session setup ==================================================
@@ -20,13 +20,13 @@ module.exports = function(passport) { // startt of function(passport)
   // passport needs ability to serialize and unserialize users out of session
 
   // used to serialize the user for the session
-  passport.serializeUser(function(user, done) {
+  passport.serializeUser ((user, done) => {
       done(null, user.id);
   });
 
   // used to deserialize the user
-  passport.deserializeUser(function(id, done) {
-      User.findById(id, function(err, user) {
+  passport.deserializeUser((id, done) => {
+      User.findById(id, (err, user) => {
           done(err, user);
       });
   });
@@ -43,15 +43,15 @@ module.exports = function(passport) { // startt of function(passport)
       passwordField : 'password',
       passReqToCallback : true // allows us to pass back the entire request to the callback
   },
-  function(req, email, password, done) {
+  (req, email, password, done) => {
 
       // asynchronous
       // User.findOne wont fire unless data is sent back
-      process.nextTick(function() { // Start of nextTick()
+      process.nextTick( () => { // Start of nextTick()
 
       // find a user whose email is the same as the forms email
       // we are checking to see if the user trying to login already exists
-      User.findOne({ 'local.email' :  email }, function(err, user) { // Start user request
+      User.findOne({ 'local.email' :  email }, (err, user) => { // Start user request
           // if there are any errors, return the error
           if (err)
               return done(err);
@@ -67,19 +67,22 @@ module.exports = function(passport) { // startt of function(passport)
 
               // set the user's local credentials
               newUser.local = {
-                email : email,
-                password : newUser.generateHash(password), 
+                // firstName: firstName,
+                // otherName: otherName,
+                // lastName: lastName,
+                email: email,
+                password : newUser.generateHash(password),
               };
 
               // save the user
-              newUser.save(function(err) {
+              newUser.save( err => {
                   if (err)
                       throw err;
                   return done(null, newUser);
               });
           }
 
-      }); // End of user request  
+      }); // End of user request
 
     }); // End of nextTick
 
@@ -96,10 +99,10 @@ module.exports = function(passport) { // startt of function(passport)
   	passwordField : 'password',
   	passReqToCallback : true // allows us to pass back the entire request to the callback
   },
-  function(req, email, password, done) {
+  (req, email, password, done) => {
   	// find a user whose email is the same as the forms email
     // we are checking to see if the user trying to login already exists
-    User.findOne({'local.email' : email}, function(err, user) { // start of find user
+    User.findOne({'local.email' : email}, (err, user) => { // start of find user
     	// if there are any errors, return the error before anything else
     	if(err) {
     		return done(err);
@@ -122,16 +125,16 @@ module.exports = function(passport) { // startt of function(passport)
   // GOOGLE ==================================================================
   // =========================================================================
   passport.use(new GoogleStrategy({
-    clientID : configAuth.googleAuth.clientID,
-    clientSecret : configAuth.googleAuth.clientSecret,
-    callbackURL : configAuth.googleAuth.callbackURL,
-    },    
-    function(token, refreshToken, profile, done) {
+    clientID: configAuth.googleAuth.clientID,
+    clientSecret: configAuth.googleAuth.clientSecret,
+    callbackURL: configAuth.googleAuth.callbackURL,
+    },
+    (token, refreshToken, profile, done) => {
       // make the code asynchronous
       // User.findOne won't fire until we have all our data back from Google
-      process.nextTick(function() {
+      process.nextTick( () => {
         // try to find the user based on their google id
-        User.findOne({'google.id' : profile.id}, function(err, user) {
+        User.findOne({'google.id' : profile.id}, (err, user) => {
           if (err) {
             return done(err);
           }
@@ -151,7 +154,7 @@ module.exports = function(passport) { // startt of function(passport)
               }
 
               // persist the user
-              newUser.save(function(err) {
+              newUser.save( err => {
                 if (err) {
                   throw err;
                 }
@@ -162,6 +165,6 @@ module.exports = function(passport) { // startt of function(passport)
       })
     }
   ));
-      
+
 
 }; // end of function(passport)

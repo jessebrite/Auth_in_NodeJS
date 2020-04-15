@@ -20,9 +20,9 @@ module.exports = function(router, passport) {
 
 	// Process the login form
 	router.post('/login', passport.authenticate('local-login', {
-		successRedirect : '/profile', // redirect to the secure profile section
-		failureRedirect : '/login', // redirect back to the signup page if there is an error
-		failureFlash : true // allow flash messages
+		successRedirect: '/profile', // redirect to the secure profile section
+		failureRedirect: '/login', // redirect back to the signup page if there is an error
+		failureFlash: true // allow flash messages
 	}));
 
 	// SIGNUP
@@ -60,7 +60,7 @@ module.exports = function(router, passport) {
   // send to google to do the authentication
   // profile gets us their basic information including their name
   // email gets their emails
-  router.get('/auth/google', 
+  router.get('/auth/google',
   	passport.authenticate('google', {scope : ['profile', 'email']}));
 
   // the callback after google has authenticated the user
@@ -87,7 +87,7 @@ function isLoggedIn(req, res, next) { // Start of isLoggedIn()
   // console.log("session is", req.session);
   // console.log("session store is", req.sessionStore);
 
-	// if user is authenticated in the session, carry on 
+	// if user is authenticated in the session, carry on
 	if (req.isAuthenticated()) {
 		return next();
 	}
